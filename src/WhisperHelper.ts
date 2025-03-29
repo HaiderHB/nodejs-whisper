@@ -16,6 +16,7 @@ export const constructCommand = (filePath: string, args: IOptions): string => {
 	}
 
 	const modelPath = path.join(WHISPER_CPP_PATH, 'models', MODEL_OBJECT[args.modelName])
+	console.log("[Nodejs-whisper-debug] Model path:", modelPath)
 	if (!fs.existsSync(modelPath)) {
 		errors.push(
 			'[Nodejs-whisper] Error: Model file does not exist. Please ensure the model is downloaded and correctly placed.'
