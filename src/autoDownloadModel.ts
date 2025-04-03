@@ -3,8 +3,11 @@ import shell from 'shelljs'
 import fs from 'fs'
 import { MODEL_OBJECT, MODELS_LIST, WHISPER_CPP_PATH } from './constants'
 
-shell.config.execPath = shell.which('node').stdout
-
+if (shell && shell.config && shell.which('node')?.stdout) {
+	shell.config.execPath = shell.which('node').stdout
+} else {
+	console.error('Unable to set shell.config.execPath. \'shell.which("node")\' returned undefined.')
+}
 export default async function autoDownloadModel(
 	logger = console,
 	autoDownloadModelName?: string,

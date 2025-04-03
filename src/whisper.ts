@@ -1,8 +1,11 @@
 import shell from 'shelljs'
 import { WHISPER_CPP_PATH, WHISPER_CPP_MAIN_PATH } from './constants'
 
-shell.config.execPath = shell.which('node').stdout
-
+if (shell && shell.config && shell.which('node')?.stdout) {
+	shell.config.execPath = shell.which('node').stdout
+} else {
+	console.error('Unable to set shell.config.execPath. \'shell.which("node")\' returned undefined.')
+}
 const projectDir = process.cwd()
 
 export interface IShellOptions {

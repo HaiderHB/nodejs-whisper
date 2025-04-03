@@ -2,8 +2,11 @@ import fs from 'fs'
 import path from 'path'
 import shell from 'shelljs'
 
-shell.config.execPath = shell.which('node').stdout
-
+if (shell && shell.config && shell.which('node')?.stdout) {
+	shell.config.execPath = shell.which('node').stdout
+} else {
+	console.error('Unable to set shell.config.execPath. \'shell.which("node")\' returned undefined.')
+}
 export const checkIfFileExists = (filePath: string) => {
 	if (!fs.existsSync(filePath)) {
 		throw new Error(`[Nodejs-whisper] Error: No such file: ${filePath}`)
