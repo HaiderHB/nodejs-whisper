@@ -1,4 +1,5 @@
 import path from 'path'
+import * as fs from 'fs'
 
 export const MODELS_LIST = [
 	'tiny',
@@ -44,7 +45,29 @@ export const MODEL_OBJECT = {
 
 export const DEFAULT_MODEL = 'tiny.en'
 
-export const WHISPER_CPP_PATH = path.join(__dirname, '..', 'cpp', 'whisper.cpp')
+export const WHISPER_CPP_PATH = (() => {
+	// First try using the standard path
+	const standardPath = path.join(__dirname, '..', 'cpp', 'whisper.cpp');
+	if (fs.existsSync(standardPath)) {
+		return standardPath;
+	}
 
+	// If that fails, try to find the package within node_modules
+	// This is particularly useful for Electron apps bundled with webpack
+	const modulePath = path.join(process.cwd(), 'node_modules', 'nodejs-whisper', 'cpp', 'whisper.cpp');
+	if (fs.existsSync(modulePath)) {
+		return modulePath;
+	}
+
+	// If running from within node_modules directory
+	const currentDir = process.cwd();
+	if (currentDir.includes('node_modules/nodejs-whisper')) {
+		return path.join(currentDir, 'cpp', 'whisper.cpp');
+	}
+
+	// Fallback to the standard path even if it might not exist
+	console.warn('Warning: Could not determine nodejs-whisper package location.');
+	return standardPath;
+})();
 export const WHISPER_CPP_MAIN_PATH =
-	process.platform === 'win32' ? 'build\\bin\\Release\\whisper-cli.exe' : './build/bin/whisper-cli'
+	process.platform === 'win32' ? 'build\\bin\\whisper-cli.exe' : './build/bin/whisper-cli'

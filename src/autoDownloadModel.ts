@@ -3,6 +3,8 @@ import shell from 'shelljs'
 import fs from 'fs'
 import { MODEL_OBJECT, MODELS_LIST, WHISPER_CPP_PATH } from './constants'
 
+shell.config.execPath = shell.which('node').stdout
+
 export default async function autoDownloadModel(
 	logger = console,
 	autoDownloadModelName?: string,
@@ -20,6 +22,7 @@ export default async function autoDownloadModel(
 
 	try {
 		const modelDirectory = path.join(WHISPER_CPP_PATH, 'models')
+		console.log("[nodejs-whisper-debug] ",modelDirectory)
 		shell.cd(modelDirectory)
 		const modelAlreadyExist = fs.existsSync(path.join(modelDirectory, MODEL_OBJECT[autoDownloadModelName]))
 
